@@ -21,19 +21,25 @@ st.title("YOLOv5 Object Detection")
 
 @st.cache_resource
 def load_model():
+    model_path = 'models/best_face.pt'
+    yolov5_path = 'yolov5/'
 
-    if not os.path.exists('models/best_face.pt'):
-        st.error("Файл 'best.pt' не найден. Пожалуйста, загрузите модель.")
+    if not os.path.exists(model_path):
+        st.error("Файл 'best_face.pt' не найден. Пожалуйста, загрузите модель.")
         return None
 
-
-    model = torch.hub.load(
-        repo_or_dir='yolov5/',  # Укажите путь к папке с YOLOv5
-        model='custom',
-        path='models/best_face.pt',
-        source='local'
-    )
-    return model
+    try:
+        model = torch.hub.load(
+            repo_or_dir=yolov5_path,
+            model='custom',
+            path=model_path,
+            source='local'
+        )
+        st.success("Модель успешно загружена.")
+        return model
+    except Exception as e:
+        st.error(f"Ошибка при загрузке модели: {e}")
+        return None
 
 model = load_model()
 
